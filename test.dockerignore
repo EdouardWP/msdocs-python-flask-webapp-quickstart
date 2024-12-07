@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.venv
+
+# Git
+.git
+.gitignore
+.github
+
+# IDE
+.idea/
+.vscode/
+
+# Project specific
+README.md
+LICENSE.md
+CONTRIBUTING.md
+*.md
+tests/
+docs/
+
+# Docker
+Dockerfile
+.dockerignore
+
+# System
+.DS_Store
