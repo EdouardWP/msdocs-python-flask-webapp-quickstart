@@ -1,0 +1,39 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.bicep'
+      - '**.json'
+      - '.github/workflows/deploy-infrastructure.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_RESOURCE_GROUP: "BCSAI2024-DEVOPS-STUDENTS-A-DEV"
+
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Bicep
+        uses: azure/arm-deploy@v1
+        with:
+          scope: subscription
+          region: westeurope
+          template: ./main.bicep
+          parameters: ./main.parameters.json
+          deploymentName: 'github-action-deployment-${{ github.run_number }}' 
