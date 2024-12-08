@@ -56,12 +56,24 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
     siteConfig: {
       linuxFxVersion: 'DOCKER|${containerRegistryName}.azurecr.io/${containerRegistryImageName}:${containerRegistryImageVersion}'
       appCommandLine: ''
-      appSettingsKeyValuePairs: {
-        WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'false'
-        DOCKER_REGISTRY_SERVER_URL: 'https://${containerRegistryLoginServer}'
-        DOCKER_REGISTRY_SERVER_USERNAME: containerRegistryUsername
-        DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistryPassword
-      }
+      appSettings: [
+        {
+          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
+          value: 'false'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: 'https://${containerRegistryLoginServer}'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+          value: containerRegistryUsername
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+          value: containerRegistryPassword
+        }
+      ]
     }
   }
 }
