@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main  
+      - q3
 
 env:
   REGISTRY_LOGIN_SERVER: edouappregistry.azurecr.io
