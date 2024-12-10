@@ -21,7 +21,7 @@ param containerRegistryImageVersion string
 @description('The name of the Key Vault')
 param keyVaultName string
 
-module keyVaultModule 'key-vault.bicep' = {
+module keyVaultModule './key-vault.bicep' = {
   name: 'keyVaultDeployment'
   params: {
     name: keyVaultName
