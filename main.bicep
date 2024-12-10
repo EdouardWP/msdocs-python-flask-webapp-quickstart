@@ -29,6 +29,10 @@ module keyVaultModule './key-vault.bicep' = {
   }
 }
 
+resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+  name: keyVaultName
+}
+
 module containerRegistry 'modules/container-registry.bicep' = {
   name: 'containerRegistryDeployment'
   params: {
@@ -69,9 +73,9 @@ module appService 'modules/app-service.bicep' = {
     containerRegistryName: name
     containerRegistryImageName: containerRegistryImageName
     containerRegistryImageVersion: containerRegistryImageVersion
-    dockerRegistryServerUrl: 'https://${name}.azurecr.io'
-    dockerRegistryServerUserName: containerRegistry.outputs.adminUsername
-    dockerRegistryServerPassword: containerRegistry.outputs.adminPassword
+    dockerRegistryServerUrl: 'https://${containerRegistry.outputs.loginServer}'
+    dockerRegistryServerUserName: keyVault.getSecret('acr-admin-username')
+    dockerRegistryServerPassword: keyVault.getSecret('acr-admin-password1')
   }
   dependsOn: [
     containerRegistry
