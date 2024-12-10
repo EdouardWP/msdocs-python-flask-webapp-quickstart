@@ -44,9 +44,6 @@ module containerRegistry 'modules/container-registry.bicep' = {
     adminCredentialsKeyVaultSecretUserPassword1: 'acr-admin-password1'
     adminCredentialsKeyVaultSecretUserPassword2: 'acr-admin-password2'
   }
-  dependsOn: [
-    keyVaultModule
-  ]
 }
 
 module appServicePlan 'modules/app-service-plan.bicep' = {
@@ -77,10 +74,6 @@ module appService 'modules/app-service.bicep' = {
     dockerRegistryServerUserName: keyVault.getSecret('acr-admin-username')
     dockerRegistryServerPassword: keyVault.getSecret('acr-admin-password1')
   }
-  dependsOn: [
-    containerRegistry
-    keyVaultModule
-  ]
 }
 
 output containerRegistryLoginServer string = containerRegistry.outputs.loginServer
