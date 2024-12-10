@@ -18,12 +18,32 @@ param containerRegistryImageName string
 @description('The version/tag of the container image')
 param containerRegistryImageVersion string
 
+@description('The name of the Key Vault')
+param keyVaultName string
+
+module keyVaultModule 'key-vault.bicep' = {
+  name: 'keyVaultDeployment'
+  params: {
+    name: keyVaultName
+    location: location
+  }
+}
+
+resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+  name: keyVaultName
+  scope: resourceGroup()
+}
+
 module containerRegistry 'modules/container-registry.bicep' = {
   name: 'containerRegistryDeployment'
   params: {
     name: name
     location: location
     acrAdminUserEnabled: acrAdminUserEnabled
+    adminCredentialsKeyVaultResourceId: keyVaultModule.outputs.keyVaultId
+    adminCredentialsKeyVaultSecretUserName: 'acr-admin-username'
+    adminCredentialsKeyVaultSecretUserPassword1: 'acr-admin-password1'
+    adminCredentialsKeyVaultSecretUserPassword2: 'acr-admin-password2'
   }
 }
 
@@ -51,7 +71,14 @@ module appService 'modules/app-service.bicep' = {
     containerRegistryName: name
     containerRegistryImageName: containerRegistryImageName
     containerRegistryImageVersion: containerRegistryImageVersion
+    dockerRegistryServerUrl: 'https://${name}.azurecr.io'
+    dockerRegistryServerUserName: keyVault.getSecret('acr-admin-username')
+    dockerRegistryServerPassword: keyVault.getSecret('acr-admin-password1')
   }
+  dependsOn: [
+    containerRegistry
+    keyVaultModule
+  ]
 }
 
 output containerRegistryLoginServer string = containerRegistry.outputs.loginServer

@@ -16,6 +16,9 @@
     },
     "containerRegistryImageVersion": {
       "value": "latest"
+    },
+    "keyVaultName": {
+      "value": "edou-key-vault"
     }
   }
 }
