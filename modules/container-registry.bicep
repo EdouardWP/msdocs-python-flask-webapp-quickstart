@@ -62,3 +62,5 @@ resource password2Secret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
 }
 
 output loginServer string = containerRegistry.properties.loginServer
+output adminUsername string = containerRegistry.listCredentials().username
+output adminPassword string = containerRegistry.listCredentials().passwords[0].value
