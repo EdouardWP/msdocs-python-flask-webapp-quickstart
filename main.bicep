@@ -33,7 +33,7 @@ module appServicePlan 'modules/app-service-plan.bicep' = {
     name: 'appServicePlanEdou'
     location: location
     sku: {
-      name: 'Basic'
+      name: 'B1'
       capacity: 1
       family: 'B'
       size: 'B1'
