@@ -41,6 +41,7 @@ jobs:
         run: |
           az deployment group create \
             --resource-group BCSAI2024-DEVOPS-STUDENTS-A-DEV \
+            --name deployment-$(date +'%Y-%m-%d-%H-%M-%S') \
             --template-file main.bicep \
             --parameters main.parameters.json
 
